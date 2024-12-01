@@ -9,8 +9,11 @@ fi
 # 获取系统内存大小（GB）
 mem_size=$(free -g | awk '/^Mem:/{print $2}')
 
-# 根据内存大小确定swap大小
-if [ "$mem_size" -le 2 ]; then
+# 对于小于1GB的内存特殊处理
+if [ "$mem_size" -lt 1 ]; then
+    echo "检测到内存小于1GB，将创建1GB的swap空间"
+    swap_size=1
+elif [ "$mem_size" -le 2 ]; then
     swap_size=$((mem_size * 2))
 elif [ "$mem_size" -le 8 ]; then
     swap_size=$mem_size
