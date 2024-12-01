@@ -31,9 +31,9 @@ if [ -f /swapfile ]; then
     rm /swapfile
 fi
 
-# 创建swap文件
+# 创建swap文件（使用dd命令替代fallocate）
 echo "正在创建 ${swap_size}GB swap文件..."
-fallocate -l ${swap_size}G /swapfile
+dd if=/dev/zero of=/swapfile bs=1024 count=$((swap_size * 1024 * 1024))
 
 # 设置权限
 chmod 600 /swapfile
